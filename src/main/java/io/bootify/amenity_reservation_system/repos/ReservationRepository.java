@@ -1,7 +1,8 @@
 package io.bootify.amenity_reservation_system.repos;
 
-import io.bootify.amenity_reservation_system.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import io.bootify.amenity_reservation_system.model.Reservation;
 
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
