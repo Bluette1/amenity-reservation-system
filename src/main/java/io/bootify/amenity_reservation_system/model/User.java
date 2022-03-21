@@ -31,6 +31,19 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+    
+	// private String firstName;
+
+	// private String lastName;
+
+    // public User(String firstName, String lastName) {
+	// 	this.firstName = firstName;
+	// 	this.lastName = lastName;
+	// }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -46,11 +59,14 @@ public class User {
     )
     private Long id;
 
-//     @OneToMany(mappedBy = "user")
-//     private Set<Reservation> userReservations;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Reservation> reservations = new HashSet<>();
+
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @CreatedDate
     @Column( updatable = false)

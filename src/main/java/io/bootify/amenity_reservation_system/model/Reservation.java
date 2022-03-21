@@ -24,6 +24,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -34,35 +35,38 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 public class Reservation {
 
-        @Id
-        @Column(nullable = false, updatable = false)
-        @SequenceGenerator(name = "primary_sequence", sequenceName = "primary_sequence", allocationSize = 1, initialValue = 10000)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_sequence")
-        private Long id;
+  @Id
+  @Column(nullable = false, updatable = false)
+  @SequenceGenerator(name = "primary_sequence", sequenceName = "primary_sequence", allocationSize = 1, initialValue = 10000)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_sequence")
+  private Long id;
+  
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @Column(nullable = false)
+  private LocalDate reservationDate;
 
-        @Column(nullable = false)
-        private LocalDate reservationDate;
+  @DateTimeFormat(pattern = "HH:mm")
+  @Column(nullable = false)
+  private LocalTime startTime;
 
-        @Column(nullable = false)
-        private LocalTime startTime;
+  @DateTimeFormat(pattern = "HH:mm")
+  @Column(nullable = false)
+  private LocalTime endTime;
 
-        @Column(nullable = false)
-        private LocalTime endTime;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id", nullable = false)
-        private User user;
+  @CreatedDate
+  @Column(updatable = false)
+  private OffsetDateTime dateCreated;
 
-        @CreatedDate
-        @Column(updatable = false)
-        private OffsetDateTime dateCreated;
+  @LastModifiedDate
+  @Column()
+  private OffsetDateTime lastUpdated;
 
-        @LastModifiedDate
-        @Column()
-        private OffsetDateTime lastUpdated;
-        
-        @Enumerated(EnumType.STRING)
-        @Column(nullable = false)
-        private AmenityType amenityType;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private AmenityType amenityType;
 
 }
