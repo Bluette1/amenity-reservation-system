@@ -54,11 +54,11 @@ public class Reservation {
         private User user;
 
         @CreatedDate
-        @Column(nullable = true, updatable = false)
+        @Column(updatable = false)
         private OffsetDateTime dateCreated;
 
         @LastModifiedDate
-        @Column(nullable = false)
+        @Column()
         private OffsetDateTime lastUpdated;
         
         @Enumerated(EnumType.STRING)

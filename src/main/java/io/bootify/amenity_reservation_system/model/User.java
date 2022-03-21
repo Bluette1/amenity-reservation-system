@@ -1,10 +1,12 @@
 package io.bootify.amenity_reservation_system.model;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,15 +46,18 @@ public class User {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Reservation> userReservations;
+//     @OneToMany(mappedBy = "user")
+//     private Set<Reservation> userReservations;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Reservation> reservations = new HashSet<>();
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column( updatable = false)
     private OffsetDateTime dateCreated;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column()
     private OffsetDateTime lastUpdated;
 
 }
