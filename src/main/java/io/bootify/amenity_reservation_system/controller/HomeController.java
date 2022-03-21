@@ -2,6 +2,7 @@ package io.bootify.amenity_reservation_system.controller;
 
 import io.bootify.amenity_reservation_system.model.Reservation;
 import io.bootify.amenity_reservation_system.model.User;
+import io.bootify.amenity_reservation_system.service.CapacityFullException;
 import io.bootify.amenity_reservation_system.service.ReservationService;
 import io.bootify.amenity_reservation_system.service.UserService;
 
@@ -10,8 +11,8 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,17 +40,27 @@ public class HomeController {
 
     @GetMapping("/reservations")
     public String reservations(Model model, HttpSession session) {
-        User user = userService.get((long) 10000);
-        session.setAttribute("user", user);
-        Reservation reservation = new Reservation();
-        model.addAttribute("reservation", reservation);
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String name = principal.getUsername();
+        User user = userService.getUserByUsername(name);
 
-        return "reservations";
-    }
+        // This should always be the case 
+        if (user != null) {
+            session.setAttribute("user", user);
+
+            // Empty reservation object in case the user creates a new reservation
+            Reservation reservation = new Reservation();
+            model.addAttribute("reservation", reservation);
+
+            return "reservations";
+        }
+
+        return "index";    
+        }
 
     @PostMapping("/reservations-submit")
     public String reservationsSubmit(@ModelAttribute Reservation reservation,
-                                     @SessionAttribute("user") User user) {
+                                     @SessionAttribute("user") User user) throws CapacityFullException {
 
         // Save to DB after updating
         assert user != null;
