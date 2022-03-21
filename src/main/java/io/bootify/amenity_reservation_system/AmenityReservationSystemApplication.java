@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,8 +30,9 @@ public class AmenityReservationSystemApplication {
       ReservationRepository reservationRepository) {
     return (args) -> {
       User user = User.builder()
-          .firstName("Mary")
-          .lastName("Nerd")
+          .fullName("Mary Jane")
+          .username("maryjane")
+          .passwordHash( bCryptPasswordEncoder().encode("password"))
           .build();
 
       userRepository.save(user);
@@ -47,5 +49,10 @@ public class AmenityReservationSystemApplication {
 
       reservationRepository.save(reservation);
     };
+  }
+
+  @Bean
+  public BCryptPasswordEncoder bCryptPasswordEncoder() {
+      return new BCryptPasswordEncoder();
   }
 }

@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 
 import lombok.AllArgsConstructor;
@@ -31,19 +33,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    
-	// private String firstName;
-
-	// private String lastName;
-
-    // public User(String firstName, String lastName) {
-	// 	this.firstName = firstName;
-	// 	this.lastName = lastName;
-	// }
-
-    public String getFullName() {
-        return this.firstName + " " + this.lastName;
-    }
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -62,11 +51,14 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Reservation> reservations = new HashSet<>();
 
-    @Column(nullable = false)
-    private String firstName;
+    @Column(nullable = false, unique = true)
+    private String fullName;
 
-    @Column(nullable = false)
-    private String lastName;
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column
+    private String passwordHash;
 
     @CreatedDate
     @Column( updatable = false)
@@ -75,5 +67,16 @@ public class User {
     @LastModifiedDate
     @Column()
     private OffsetDateTime lastUpdated;
+
+    @PrePersist
+    public void prePersist() {
+        dateCreated = OffsetDateTime.now();
+        lastUpdated = dateCreated;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdated = OffsetDateTime.now();
+    }
 
 }
