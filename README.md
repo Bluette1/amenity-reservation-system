@@ -62,6 +62,7 @@ Users are able to:
 
 
 - Website - [Marylene Sawyer](http://www.marylene.tech/)
+- GitHub - [@Bluette1](https://github.com/Bluette1)
 - Frontend Mentor - [@Bluette1](https://www.frontendmentor.io/profile/Bluette1)
 - Twitter - [@MaryleneSawyer](https://twitter.com/MaryleneSawyer)
 
